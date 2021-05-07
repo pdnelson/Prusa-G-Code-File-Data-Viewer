@@ -44,7 +44,44 @@ namespace PrusaGCodeFileDataViewer
             }
 
             lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
-            lblTotalCost.Text = String.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+            lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            if (GCodeFiles.Count > 0)
+            {
+                Stream stream;
+                SaveFileDialog saveFile = new SaveFileDialog();
+
+                saveFile.Filter = "csv files (*.csv)|*.csv";
+                saveFile.FilterIndex = 2;
+                saveFile.RestoreDirectory = true;
+
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+
+                    if ((stream = saveFile.OpenFile()) != null)
+                    {
+                        StringBuilder csv = new StringBuilder();
+
+                        // First write the header
+                        csv.AppendLine("Item Name,Filament Used,Total Cost");
+
+                        // Write each G-Code file to the CSV
+                        foreach(GCodeFile g in GCodeFiles)
+                        {
+                            csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
+                        }
+
+                        // Convert StringBuilder to bytes and close the stream
+                        byte[] bytes = Encoding.ASCII.GetBytes(csv.ToString());
+                        stream.Write(bytes, 0, bytes.Length);
+                        stream.Close();
+                    }
+                }
+            }
+            else MessageBox.Show("Uh-oh, there isn't any data to export!", "No G-Code Files");
         }
 
         private void LoadGCodeFilesFromDirectoryList(string[] directories)
@@ -182,6 +219,5 @@ namespace PrusaGCodeFileDataViewer
 
             return total;
         }
-
     }
 }
