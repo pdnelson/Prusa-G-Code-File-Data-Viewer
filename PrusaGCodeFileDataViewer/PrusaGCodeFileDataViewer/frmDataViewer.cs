@@ -90,11 +90,11 @@ namespace PrusaGCodeFileDataViewer
         {
             try
             {
-                int index = dgvFiles.CurrentCell.RowIndex;
+                int index = (int)dgvFiles.Rows[dgvFiles.CurrentCell.RowIndex].Cells[0].Value;
 
                 string output = $"File name: {GCodeFiles[index].FileName}\n" +
                     $"Filament Spool Cost: {string.Format("{0:C}", GCodeFiles[index].FilamentSpoolCost)}\n" +
-                    $"Filament Used: {GCodeFiles[index].FilamentUsed}\n" +
+                    $"Filament Used: {GCodeFiles[index].FilamentUsed}g\n" +
                     $"Total cost: {string.Format("{0:C}", GCodeFiles[index].FilamentUsedCost)}";
 
                 MessageBox.Show(output, "G-Code File Details");
@@ -102,6 +102,23 @@ namespace PrusaGCodeFileDataViewer
 
             // If this exception occurs, the user didn't click an existing cell
             catch(NullReferenceException) { }
+        }
+
+        private void dgvFiles_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            try
+            {
+                int index = (int)dgvFiles.Rows[dgvFiles.CurrentCell.RowIndex].Cells[0].Value;
+
+                // Taking away the index makes it not match up with the DGV, so we just make it blank...
+                GCodeFiles[index] = new GCodeFile();
+
+                lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
+                lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+            }
+
+            // If this exception occurs, the user didn't delete an existing cell
+            catch (NullReferenceException) { }
         }
 
         private bool LoadGCodeFilesFromDirectoryList(string[] directories)
@@ -229,7 +246,7 @@ namespace PrusaGCodeFileDataViewer
         {
             for (int i = 0; i < file.Length; i++)
             {
-                dgvFiles.Rows.Add(file[i].FileName, file[i].FilamentSpoolCost, file[i].FilamentUsed, string.Format("{0:C}", file[i].FilamentUsedCost));
+                dgvFiles.Rows.Add(GCodeFiles.Count, file[i].FileName, file[i].FilamentSpoolCost, file[i].FilamentUsed, string.Format("{0:C}", file[i].FilamentUsedCost));
                 GCodeFiles.Add(file[i]);
             }
         }

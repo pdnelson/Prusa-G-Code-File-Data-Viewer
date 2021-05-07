@@ -33,11 +33,12 @@
             this.dgvFiles = new System.Windows.Forms.DataGridView();
             this.lblTotalUsed = new System.Windows.Forms.Label();
             this.lblTotalCost = new System.Windows.Forms.Label();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.spoolCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.used = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.filamentUsedCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnExport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,9 +65,10 @@
             // dgvFiles
             // 
             this.dgvFiles.AllowUserToAddRows = false;
-            this.dgvFiles.AllowUserToDeleteRows = false;
+            this.dgvFiles.AllowUserToOrderColumns = true;
             this.dgvFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.index,
             this.name,
             this.spoolCost,
             this.used,
@@ -77,6 +79,7 @@
             this.dgvFiles.Size = new System.Drawing.Size(639, 386);
             this.dgvFiles.TabIndex = 2;
             this.dgvFiles.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFiles_CellDoubleClick);
+            this.dgvFiles.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvFiles_UserDeletingRow);
             // 
             // lblTotalUsed
             // 
@@ -96,28 +99,6 @@
             this.lblTotalCost.TabIndex = 4;
             this.lblTotalCost.Text = "Total: $0.00";
             // 
-            // name
-            // 
-            this.name.HeaderText = "File Name";
-            this.name.Name = "name";
-            this.name.Width = 280;
-            // 
-            // spoolCost
-            // 
-            this.spoolCost.HeaderText = "Spool Cost";
-            this.spoolCost.Name = "spoolCost";
-            this.spoolCost.Width = 90;
-            // 
-            // used
-            // 
-            this.used.HeaderText = "Filament Used";
-            this.used.Name = "used";
-            // 
-            // filamentUsedCost
-            // 
-            this.filamentUsedCost.HeaderText = "Filament Used Cost";
-            this.filamentUsedCost.Name = "filamentUsedCost";
-            // 
             // btnExport
             // 
             this.btnExport.Location = new System.Drawing.Point(189, 12);
@@ -127,6 +108,39 @@
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = true;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // index
+            // 
+            this.index.HeaderText = "index";
+            this.index.Name = "index";
+            this.index.ReadOnly = true;
+            this.index.Visible = false;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "File Name";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            this.name.Width = 280;
+            // 
+            // spoolCost
+            // 
+            this.spoolCost.HeaderText = "Spool Cost";
+            this.spoolCost.Name = "spoolCost";
+            this.spoolCost.ReadOnly = true;
+            this.spoolCost.Width = 90;
+            // 
+            // used
+            // 
+            this.used.HeaderText = "Filament Used";
+            this.used.Name = "used";
+            this.used.ReadOnly = true;
+            // 
+            // filamentUsedCost
+            // 
+            this.filamentUsedCost.HeaderText = "Filament Used Cost";
+            this.filamentUsedCost.Name = "filamentUsedCost";
+            this.filamentUsedCost.ReadOnly = true;
             // 
             // frmGCodeViewer
             // 
@@ -156,11 +170,12 @@
         private System.Windows.Forms.DataGridView dgvFiles;
         private System.Windows.Forms.Label lblTotalUsed;
         private System.Windows.Forms.Label lblTotalCost;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn index;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn spoolCost;
         private System.Windows.Forms.DataGridViewTextBoxColumn used;
         private System.Windows.Forms.DataGridViewTextBoxColumn filamentUsedCost;
-        private System.Windows.Forms.Button btnExport;
     }
 }
 
