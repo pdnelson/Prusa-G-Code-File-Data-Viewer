@@ -74,6 +74,9 @@ namespace PrusaGCodeFileDataViewer
                             csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
                         }
 
+                        // Append totals for each column
+                        csv.AppendLine($"Total:,{GetTotalFilamentUsed()},{GetTotalFilamentUsedCost()}");
+
                         // Convert StringBuilder to bytes and close the stream
                         byte[] bytes = Encoding.ASCII.GetBytes(csv.ToString());
                         stream.Write(bytes, 0, bytes.Length);
