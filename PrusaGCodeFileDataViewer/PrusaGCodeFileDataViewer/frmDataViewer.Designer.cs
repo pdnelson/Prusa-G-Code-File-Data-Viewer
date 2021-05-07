@@ -30,8 +30,13 @@
         {
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.dgvFiles = new System.Windows.Forms.DataGridView();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.spoolCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.used = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.filamentUsedCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLoad
@@ -51,26 +56,63 @@
             this.btnClear.TabIndex = 1;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
-            // dataGridView1
+            // dgvFiles
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 41);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(622, 238);
-            this.dataGridView1.TabIndex = 2;
+            this.dgvFiles.AllowUserToAddRows = false;
+            this.dgvFiles.AllowUserToDeleteRows = false;
+            this.dgvFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.name,
+            this.size,
+            this.spoolCost,
+            this.used,
+            this.filamentUsedCost});
+            this.dgvFiles.Location = new System.Drawing.Point(12, 41);
+            this.dgvFiles.Name = "dgvFiles";
+            this.dgvFiles.Size = new System.Drawing.Size(622, 238);
+            this.dgvFiles.TabIndex = 2;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "File Name";
+            this.name.Name = "name";
+            this.name.Width = 200;
+            // 
+            // size
+            // 
+            this.size.HeaderText = "File Size";
+            this.size.Name = "size";
+            this.size.Width = 75;
+            // 
+            // spoolCost
+            // 
+            this.spoolCost.HeaderText = "Spool Cost";
+            this.spoolCost.Name = "spoolCost";
+            this.spoolCost.Width = 90;
+            // 
+            // used
+            // 
+            this.used.HeaderText = "Filament Used";
+            this.used.Name = "used";
+            // 
+            // filamentUsedCost
+            // 
+            this.filamentUsedCost.HeaderText = "Filament Used Cost";
+            this.filamentUsedCost.Name = "filamentUsedCost";
             // 
             // frmGCodeViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 291);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dgvFiles);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnLoad);
             this.Name = "frmGCodeViewer";
             this.Text = "Prusa G-Code File Data Viewer";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -79,7 +121,12 @@
 
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvFiles;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn size;
+        private System.Windows.Forms.DataGridViewTextBoxColumn spoolCost;
+        private System.Windows.Forms.DataGridViewTextBoxColumn used;
+        private System.Windows.Forms.DataGridViewTextBoxColumn filamentUsedCost;
     }
 }
 

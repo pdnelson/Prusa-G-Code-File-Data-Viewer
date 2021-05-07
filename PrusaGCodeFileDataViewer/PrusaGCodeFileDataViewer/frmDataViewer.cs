@@ -12,9 +12,19 @@ namespace PrusaGCodeFileDataViewer
 {
     public partial class frmGCodeViewer : Form
     {
+        List<GCodeFile> Files;
+
         public frmGCodeViewer()
         {
             InitializeComponent();
+            Files = new List<GCodeFile>();
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            Files.Clear();
+            dgvFiles.DataSource = null;
+            dgvFiles.Rows.Clear();
         }
     }
 }
