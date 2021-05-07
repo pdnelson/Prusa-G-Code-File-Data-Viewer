@@ -55,6 +55,7 @@
     <Compile Include="GCodeFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreamExtensions.cs" />
     <EmbeddedResource Include="frmDataViewer.resx">
       <DependentUpon>frmDataViewer.cs</DependentUpon>
     </EmbeddedResource>

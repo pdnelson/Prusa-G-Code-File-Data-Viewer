@@ -199,15 +199,16 @@ namespace PrusaGCodeFileDataViewer
                 gCodes[i].FileName = oneDir;
 
 
-                using (StreamReader stream = File.OpenText(directories[i + startIndex]))
+                using (Stream stream = File.OpenRead(directories[i + startIndex]))
                 {
                     string[] currLine = new string[0];
 
                     while (gCodes[i].FilamentUsed == 0 || gCodes[i].FilamentUsedCost == 0 || gCodes[i].FilamentSpoolCost == 0)
                     {
-                        if (stream.Peek() > 0)
+                        if (stream.Peek())
                         {
-                            currLine = stream.ReadLine().Split(new string[] { " = " }, StringSplitOptions.None);
+                            string s = stream.ReadLine();
+                            currLine = s.Split(new string[] { " = " }, StringSplitOptions.None);
                         }
                         else
                         {
