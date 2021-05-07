@@ -103,23 +103,50 @@ namespace PrusaGCodeFileDataViewer
             for(int i = 0; i < gCodes.Length; i++)
             {
                 gCodes[i] = new GCodeFile();
-                string file = File.ReadAllText(directories[i + startIndex]);
 
                 // File name
-                string[] oneDir = directories[i].Split(new string[] { "\\" }, StringSplitOptions.None);
+                string[] oneDir = directories[i + startIndex].Split(new string[] { "\\" }, StringSplitOptions.None);
                 gCodes[i].FileName = oneDir[oneDir.Length - 1];
 
-                // File size
-                gCodes[i].FileSize = file.Length;
 
-                // Filament spool cost
-                gCodes[i].FilamentSpoolCost = 0; // TODO: Implement
+                using (StreamReader stream = File.OpenText(directories[i + startIndex]))
+                {
+                    string[] currLine = new string[0];
 
-                // Filament used
-                gCodes[i].FilamentUsed = 0; // TODO: Implement
+                    while (gCodes[i].FilamentUsed == 0 || gCodes[i].FilamentUsedCost == 0 || gCodes[i].FilamentSpoolCost == 0)
+                    {
+                        if (stream.Peek() > 0)
+                        {
+                            currLine = stream.ReadLine().Split(new string[] { " = " }, StringSplitOptions.None);
+                        }
+                        else
+                        {
+                            break;
+                        }
 
-                // Filament used cost
-                gCodes[i].FilamentUsedCost = 0; // TODO: Implement
+                        // Filament spool cost
+                        if (currLine[0].Contains("filament_cost"))
+                        {
+                            double value = double.Parse(currLine[1]);
+                            gCodes[i].FilamentSpoolCost = value;
+                        }
+
+                        // Filament used
+                        if (currLine[0].Contains("total filament used [g]"))
+                        {
+                            double value = double.Parse(currLine[1]);
+                            gCodes[i].FilamentUsed = value;
+                        }
+
+                        // Filament used cost
+                        if (currLine[0].Contains("total filament cost"))
+                        {
+                            double value = double.Parse(currLine[1]);
+                            gCodes[i].FilamentUsedCost = value;
+                        }
+
+                    }
+                }
             }
 
             return gCodes;
@@ -129,7 +156,7 @@ namespace PrusaGCodeFileDataViewer
         {
             for (int i = 0; i < file.Length; i++)
             {
-                dgvFiles.Rows.Add(file[i].FileName, file[i].FileSize, file[i].FilamentSpoolCost, file[i].FilamentUsed, file[i].FilamentUsedCost);
+                dgvFiles.Rows.Add(file[i].FileName, file[i].FilamentSpoolCost, file[i].FilamentUsed, file[i].FilamentUsedCost);
                 GCodeFiles.Add(file[i]);
             }
         }
@@ -142,7 +169,7 @@ namespace PrusaGCodeFileDataViewer
                 total += GCodeFiles[i].FilamentUsed;
             }
 
-            return total / GCodeFiles.Count;
+            return total;
         }
 
         private double GetTotalFilamentUsedCost()
@@ -153,7 +180,7 @@ namespace PrusaGCodeFileDataViewer
                 total += GCodeFiles[i].FilamentUsedCost;
             }
 
-            return total / GCodeFiles.Count;
+            return total;
         }
 
     }

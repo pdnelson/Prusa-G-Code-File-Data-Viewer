@@ -10,7 +10,6 @@ namespace PrusaGCodeFileDataViewer
     {
         // File data
         public string FileName { get; set; }
-        public int FileSize { get; set; }
 
         // Specifications
         public double FilamentSpoolCost { get; set; }

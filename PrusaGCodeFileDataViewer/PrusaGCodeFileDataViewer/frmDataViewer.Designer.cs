@@ -31,13 +31,12 @@
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.dgvFiles = new System.Windows.Forms.DataGridView();
+            this.lblTotalUsed = new System.Windows.Forms.Label();
+            this.lblTotalCost = new System.Windows.Forms.Label();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.size = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.spoolCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.used = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.filamentUsedCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lblTotalUsed = new System.Windows.Forms.Label();
-            this.lblTotalCost = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,7 +67,6 @@
             this.dgvFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.name,
-            this.size,
             this.spoolCost,
             this.used,
             this.filamentUsedCost});
@@ -76,34 +74,6 @@
             this.dgvFiles.Name = "dgvFiles";
             this.dgvFiles.Size = new System.Drawing.Size(622, 238);
             this.dgvFiles.TabIndex = 2;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "File Name";
-            this.name.Name = "name";
-            this.name.Width = 200;
-            // 
-            // size
-            // 
-            this.size.HeaderText = "File Size";
-            this.size.Name = "size";
-            this.size.Width = 75;
-            // 
-            // spoolCost
-            // 
-            this.spoolCost.HeaderText = "Spool Cost";
-            this.spoolCost.Name = "spoolCost";
-            this.spoolCost.Width = 90;
-            // 
-            // used
-            // 
-            this.used.HeaderText = "Filament Used";
-            this.used.Name = "used";
-            // 
-            // filamentUsedCost
-            // 
-            this.filamentUsedCost.HeaderText = "Filament Used Cost";
-            this.filamentUsedCost.Name = "filamentUsedCost";
             // 
             // lblTotalUsed
             // 
@@ -122,6 +92,28 @@
             this.lblTotalCost.Size = new System.Drawing.Size(43, 13);
             this.lblTotalCost.TabIndex = 4;
             this.lblTotalCost.Text = "Total: 0";
+            // 
+            // name
+            // 
+            this.name.HeaderText = "File Name";
+            this.name.Name = "name";
+            this.name.Width = 280;
+            // 
+            // spoolCost
+            // 
+            this.spoolCost.HeaderText = "Spool Cost";
+            this.spoolCost.Name = "spoolCost";
+            this.spoolCost.Width = 90;
+            // 
+            // used
+            // 
+            this.used.HeaderText = "Filament Used";
+            this.used.Name = "used";
+            // 
+            // filamentUsedCost
+            // 
+            this.filamentUsedCost.HeaderText = "Filament Used Cost";
+            this.filamentUsedCost.Name = "filamentUsedCost";
             // 
             // frmGCodeViewer
             // 
@@ -146,13 +138,12 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.DataGridView dgvFiles;
+        private System.Windows.Forms.Label lblTotalUsed;
+        private System.Windows.Forms.Label lblTotalCost;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn size;
         private System.Windows.Forms.DataGridViewTextBoxColumn spoolCost;
         private System.Windows.Forms.DataGridViewTextBoxColumn used;
         private System.Windows.Forms.DataGridViewTextBoxColumn filamentUsedCost;
-        private System.Windows.Forms.Label lblTotalUsed;
-        private System.Windows.Forms.Label lblTotalCost;
     }
 }
 
