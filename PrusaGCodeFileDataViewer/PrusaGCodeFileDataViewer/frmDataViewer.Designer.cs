@@ -76,6 +76,7 @@
             this.dgvFiles.ReadOnly = true;
             this.dgvFiles.Size = new System.Drawing.Size(639, 386);
             this.dgvFiles.TabIndex = 2;
+            this.dgvFiles.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFiles_CellDoubleClick);
             // 
             // lblTotalUsed
             // 

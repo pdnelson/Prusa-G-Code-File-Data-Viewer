@@ -86,6 +86,24 @@ namespace PrusaGCodeFileDataViewer
             else MessageBox.Show("Uh-oh, there isn't any data to export!", "No G-Code Files");
         }
 
+        private void dgvFiles_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                int index = dgvFiles.CurrentCell.RowIndex;
+
+                string output = $"File name: {GCodeFiles[index].FileName}\n" +
+                    $"Filament Spool Cost: {string.Format("{0:C}", GCodeFiles[index].FilamentSpoolCost)}\n" +
+                    $"Filament Used: {GCodeFiles[index].FilamentUsed}\n" +
+                    $"Total cost: {string.Format("{0:C}", GCodeFiles[index].FilamentUsedCost)}";
+
+                MessageBox.Show(output, "G-Code File Details");
+            }
+
+            // If this exception occurs, the user didn't click an existing cell
+            catch(NullReferenceException) { }
+        }
+
         private bool LoadGCodeFilesFromDirectoryList(string[] directories)
         {
             // Isolate G-Code files
