@@ -47,6 +47,7 @@
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load Directory";
             this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnClear
             // 

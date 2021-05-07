@@ -52,6 +52,7 @@
     <Compile Include="frmDataViewer.Designer.cs">
       <DependentUpon>frmDataViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="GCodeFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmDataViewer.resx">
