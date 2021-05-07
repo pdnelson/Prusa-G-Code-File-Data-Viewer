@@ -48,7 +48,7 @@ namespace PrusaGCodeFileDataViewer
 
         private void btnExport_Click(object sender, EventArgs e)
         {
-            if (GCodeFiles.Count > 0)
+            if (dgvFiles.Rows.Count > 0)
             {
                 Stream stream;
                 SaveFileDialog saveFile = new SaveFileDialog();
@@ -70,7 +70,7 @@ namespace PrusaGCodeFileDataViewer
                         // Write each G-Code file to the CSV
                         foreach(GCodeFile g in GCodeFiles)
                         {
-                            csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
+                            if(g.FileName != null) csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
                         }
 
                         // Append totals for each column
