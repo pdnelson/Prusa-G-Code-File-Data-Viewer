@@ -33,18 +33,22 @@ namespace PrusaGCodeFileDataViewer
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            bool success = false;
+
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath));
+                    success = LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath));
                 }
             }
 
             lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
             lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+
+            if (!success) MessageBox.Show("No *.gcode files were found in that directory. :(", "No Files Found");
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -87,7 +91,7 @@ namespace PrusaGCodeFileDataViewer
             else MessageBox.Show("Uh-oh, there isn't any data to export!", "No G-Code Files");
         }
 
-        private void LoadGCodeFilesFromDirectoryList(string[] directories)
+        private bool LoadGCodeFilesFromDirectoryList(string[] directories)
         {
             // Isolate G-Code files
             List<string> gCodeDirectories = new List<string>();
@@ -95,21 +99,25 @@ namespace PrusaGCodeFileDataViewer
             {
                 if (directories[i].EndsWith(".gcode")) gCodeDirectories.Add(directories[i]);
             }
+            if (gCodeDirectories.Count == 0)
+            {
+                return false;
+            }
 
             GCodeFile[] d1 = new GCodeFile[0];
             GCodeFile[] d2 = new GCodeFile[0];
             int threadTaskDivider = 0;
 
             // If more than one file, calculate how much each thread will process
-            if(directories.Length > 1)
+            if(gCodeDirectories.Count > 1)
             {
-                threadTaskDivider = directories.Length / 2;
+                threadTaskDivider = gCodeDirectories.Count / 2;
             }
 
             // If only one file, one thread can take care of it all
             else
             {
-                threadTaskDivider = directories.Length - 1;
+                threadTaskDivider = gCodeDirectories.Count - 1;
             }
 
             // Parse and add the files to the main list
@@ -119,11 +127,11 @@ namespace PrusaGCodeFileDataViewer
             p1.Start();
 
             // If more than one file is present, split up the tasks between two threads
-            if (directories.Length > 1)
+            if (gCodeDirectories.Count > 1)
             {
                 Thread p2 = new Thread(() =>
                 {
-                    d2 = GCodeFileParser(threadTaskDivider + 1, directories.Length - 1, gCodeDirectories);
+                    d2 = GCodeFileParser(threadTaskDivider + 1, gCodeDirectories.Count - 1, gCodeDirectories);
                 });
                 p2.Start();
                 p2.Join();
@@ -134,6 +142,8 @@ namespace PrusaGCodeFileDataViewer
             // Display files on the UI
             AddGCodeToList(d1);
             AddGCodeToList(d2);
+
+            return true;
         }
 
         private GCodeFile[] GCodeFileParser(int startIndex, int endIndex, List<string> directories)
@@ -145,8 +155,18 @@ namespace PrusaGCodeFileDataViewer
                 gCodes[i] = new GCodeFile();
 
                 // File name
-                string[] oneDir = directories[i + startIndex].Split(new string[] { "\\" }, StringSplitOptions.None);
-                gCodes[i].FileName = oneDir[oneDir.Length - 1];
+
+                string oneDir = directories[i + startIndex];
+
+                // If this fails, it means no "\\" was found, and we are in a single-letter directory
+                try
+                {
+                    string[] oneDirSplit = oneDir.Split(new string[] { "\\" }, StringSplitOptions.None);
+                    oneDir = oneDirSplit[oneDirSplit.Length - 1];
+                }
+                catch { }
+
+                gCodes[i].FileName = oneDir;
 
 
                 using (StreamReader stream = File.OpenText(directories[i + startIndex]))
@@ -196,7 +216,7 @@ namespace PrusaGCodeFileDataViewer
         {
             for (int i = 0; i < file.Length; i++)
             {
-                dgvFiles.Rows.Add(file[i].FileName, file[i].FilamentSpoolCost, file[i].FilamentUsed, file[i].FilamentUsedCost);
+                dgvFiles.Rows.Add(file[i].FileName, file[i].FilamentSpoolCost, file[i].FilamentUsed, string.Format("{0:C}", file[i].FilamentUsedCost));
                 GCodeFiles.Add(file[i]);
             }
         }
