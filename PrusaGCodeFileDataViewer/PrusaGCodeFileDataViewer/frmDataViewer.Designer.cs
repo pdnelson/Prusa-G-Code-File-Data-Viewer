@@ -36,6 +36,8 @@
             this.spoolCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.used = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.filamentUsedCost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblTotalUsed = new System.Windows.Forms.Label();
+            this.lblTotalCost = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,11 +105,31 @@
             this.filamentUsedCost.HeaderText = "Filament Used Cost";
             this.filamentUsedCost.Name = "filamentUsedCost";
             // 
+            // lblTotalUsed
+            // 
+            this.lblTotalUsed.AutoSize = true;
+            this.lblTotalUsed.Location = new System.Drawing.Point(419, 25);
+            this.lblTotalUsed.Name = "lblTotalUsed";
+            this.lblTotalUsed.Size = new System.Drawing.Size(43, 13);
+            this.lblTotalUsed.TabIndex = 3;
+            this.lblTotalUsed.Text = "Total: 0";
+            // 
+            // lblTotalCost
+            // 
+            this.lblTotalCost.AutoSize = true;
+            this.lblTotalCost.Location = new System.Drawing.Point(519, 25);
+            this.lblTotalCost.Name = "lblTotalCost";
+            this.lblTotalCost.Size = new System.Drawing.Size(43, 13);
+            this.lblTotalCost.TabIndex = 4;
+            this.lblTotalCost.Text = "Total: 0";
+            // 
             // frmGCodeViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 291);
+            this.Controls.Add(this.lblTotalCost);
+            this.Controls.Add(this.lblTotalUsed);
             this.Controls.Add(this.dgvFiles);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnLoad);
@@ -115,6 +137,7 @@
             this.Text = "Prusa G-Code File Data Viewer";
             ((System.ComponentModel.ISupportInitialize)(this.dgvFiles)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -128,6 +151,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn spoolCost;
         private System.Windows.Forms.DataGridViewTextBoxColumn used;
         private System.Windows.Forms.DataGridViewTextBoxColumn filamentUsedCost;
+        private System.Windows.Forms.Label lblTotalUsed;
+        private System.Windows.Forms.Label lblTotalCost;
     }
 }
 

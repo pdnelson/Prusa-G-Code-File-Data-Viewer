@@ -14,16 +14,21 @@ namespace PrusaGCodeFileDataViewer
 {
     public partial class frmGCodeViewer : Form
     {
+        List<GCodeFile> GCodeFiles;
 
         public frmGCodeViewer()
         {
             InitializeComponent();
+            GCodeFiles = new List<GCodeFile>();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            GCodeFiles.Clear();
             dgvFiles.DataSource = null;
             dgvFiles.Rows.Clear();
+            lblTotalUsed.Text = "Total: 0";
+            lblTotalCost.Text = "Total: 0";
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -37,6 +42,9 @@ namespace PrusaGCodeFileDataViewer
                     LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath));
                 }
             }
+
+            lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed();
+            lblTotalCost.Text = "Total: " + GetTotalFilamentUsedCost();
         }
 
         private void LoadGCodeFilesFromDirectoryList(string[] directories)
@@ -122,7 +130,31 @@ namespace PrusaGCodeFileDataViewer
             for (int i = 0; i < file.Length; i++)
             {
                 dgvFiles.Rows.Add(file[i].FileName, file[i].FileSize, file[i].FilamentSpoolCost, file[i].FilamentUsed, file[i].FilamentUsedCost);
+                GCodeFiles.Add(file[i]);
             }
         }
+
+        private double GetTotalFilamentUsed()
+        {
+            double total = 0;
+            for(int i = 0; i < GCodeFiles.Count; i++)
+            {
+                total += GCodeFiles[i].FilamentUsed;
+            }
+
+            return total / GCodeFiles.Count;
+        }
+
+        private double GetTotalFilamentUsedCost()
+        {
+            double total = 0;
+            for (int i = 0; i < GCodeFiles.Count; i++)
+            {
+                total += GCodeFiles[i].FilamentUsedCost;
+            }
+
+            return total / GCodeFiles.Count;
+        }
+
     }
 }
