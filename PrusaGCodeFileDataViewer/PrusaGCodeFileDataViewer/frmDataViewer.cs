@@ -27,8 +27,8 @@ namespace PrusaGCodeFileDataViewer
             GCodeFiles.Clear();
             dgvFiles.DataSource = null;
             dgvFiles.Rows.Clear();
-            lblTotalUsed.Text = "Total: 0";
-            lblTotalCost.Text = "Total: 0";
+            lblTotalUsed.Text = "Total: 0g";
+            lblTotalCost.Text = "Total: $0.00";
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -43,8 +43,8 @@ namespace PrusaGCodeFileDataViewer
                 }
             }
 
-            lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed();
-            lblTotalCost.Text = "Total: " + GetTotalFilamentUsedCost();
+            lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
+            lblTotalCost.Text = String.Format("Total: {0:C}", GetTotalFilamentUsedCost());
         }
 
         private void LoadGCodeFilesFromDirectoryList(string[] directories)

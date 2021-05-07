@@ -80,18 +80,18 @@
             this.lblTotalUsed.AutoSize = true;
             this.lblTotalUsed.Location = new System.Drawing.Point(419, 25);
             this.lblTotalUsed.Name = "lblTotalUsed";
-            this.lblTotalUsed.Size = new System.Drawing.Size(43, 13);
+            this.lblTotalUsed.Size = new System.Drawing.Size(49, 13);
             this.lblTotalUsed.TabIndex = 3;
-            this.lblTotalUsed.Text = "Total: 0";
+            this.lblTotalUsed.Text = "Total: 0g";
             // 
             // lblTotalCost
             // 
             this.lblTotalCost.AutoSize = true;
             this.lblTotalCost.Location = new System.Drawing.Point(519, 25);
             this.lblTotalCost.Name = "lblTotalCost";
-            this.lblTotalCost.Size = new System.Drawing.Size(43, 13);
+            this.lblTotalCost.Size = new System.Drawing.Size(64, 13);
             this.lblTotalCost.TabIndex = 4;
-            this.lblTotalCost.Text = "Total: 0";
+            this.lblTotalCost.Text = "Total: $0.00";
             // 
             // name
             // 
