@@ -41,11 +41,10 @@ namespace PrusaGCodeFileDataViewer
                         stream.Read(b, 0, 1);
                         hasHitNewLine = true;
                     }
-                    else if (stream.Peek())
+                    else
                     {
                         sb.Append(Encoding.ASCII.GetChars(b));
                     }
-                    else hasHitNewLine = true;
                 }
 
                 // We have reached the end of the file
