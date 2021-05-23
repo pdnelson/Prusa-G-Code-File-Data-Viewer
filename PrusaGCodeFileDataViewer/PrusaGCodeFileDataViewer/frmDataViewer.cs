@@ -219,14 +219,14 @@ namespace PrusaGCodeFileDataViewer
                         }
 
                         // Filament used
-                        if (currLine[0].Contains("total filament used [g]"))
+                        else if (currLine[0].Contains("total filament used [g]"))
                         {
                             double value = double.Parse(currLine[1]);
                             gCodes[i].FilamentUsed = value;
                         }
 
                         // Filament used cost
-                        if (currLine[0].Contains("total filament cost"))
+                        else if (currLine[0].Contains("total filament cost"))
                         {
                             double value = double.Parse(currLine[1]);
                             gCodes[i].FilamentUsedCost = value;
