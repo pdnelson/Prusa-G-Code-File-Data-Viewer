@@ -28,22 +28,26 @@ namespace PrusaGCodeFileDataViewer
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            bool success = false;
-
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    success = LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath));
+                    // If files are found, recalculate the totals with the new values
+                    if(LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath)))
+                    {
+                        lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
+                        lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+                    }
+
+                    // If no files are found, pop up an error message
+                    else
+                    {
+                        MessageBox.Show("No *.gcode files were found in that directory. :(", "No Files Found");
+                    }
                 }
             }
-
-            lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
-            lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
-
-            if (!success) MessageBox.Show("No *.gcode files were found in that directory. :(", "No Files Found");
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -121,6 +125,11 @@ namespace PrusaGCodeFileDataViewer
             catch (NullReferenceException) { }
         }
 
+        /// <summary>
+        /// Loads .gcode files from a directory.
+        /// </summary>
+        /// <param name="directories">All of the files within a directory.</param>
+        /// <returns>True if files were found, false if no files were found.</returns>
         private bool LoadGCodeFilesFromDirectoryList(string[] directories)
         {
             // Isolate G-Code files
