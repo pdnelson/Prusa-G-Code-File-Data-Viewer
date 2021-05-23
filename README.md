@@ -11,6 +11,9 @@ What this program does, is moves through each `.gcode` file in a folder, identif
 individual items, or export to a `.csv` file.
 
 # How to use it
+
+![image](https://user-images.githubusercontent.com/48131480/119244896-e8a07e80-bb42-11eb-868d-8296f2e9e274.png)
+
 First, you need to pick what directory you want to load `.gcode` files from. If you pick one that doesn't have any files, the program will notify you.
 
 After that, you must wait a few seconds for the data to load. While this process is multithreaded, it loads slowly because the program scans each line of the `.gcode`
@@ -24,7 +27,7 @@ Now that the files are loaded, here are some of the features this program has!
   - This automatically deducts from the total filament used and cost
 - Loading another directory will add to the current list; if you want to start over, you must first click "Clear" to get rid of the old list, or use your "Delete" key
 a bunch
-- "Export" will export the list to a .csv
+- "Export" will export the list to a `.csv`
   - It is important to note that the files will be listed in the .csv in the same order they were in the folder, regardless of how they are currently
   sorted on the user interface
   - Totals will be tallied at the bottom
