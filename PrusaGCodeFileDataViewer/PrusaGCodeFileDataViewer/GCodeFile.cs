@@ -17,5 +17,14 @@ namespace PrusaGCodeFileDataViewer
         public double FilamentUsedCost { get; set; }
 
         public GCodeFile() { }
+
+        /// <summary>
+        /// This will tell us if all the fields are populated in a GCodeFile.
+        /// </summary>
+        /// <returns>True if all fields are populated, false otherwise.</returns>
+        public bool AllFieldsPopulated()
+        {
+            return FilamentUsed != 0 && FilamentUsedCost != 0 && FilamentSpoolCost != 0;
+        }
     }
 }

@@ -203,16 +203,13 @@ namespace PrusaGCodeFileDataViewer
                 {
                     string[] currLine = new string[0];
 
-                    while (gCodes[i].FilamentUsed == 0 || gCodes[i].FilamentUsedCost == 0 || gCodes[i].FilamentSpoolCost == 0)
+                    // Keep searching the file until all GCodeFile fields have been populated, 
+                    // or the end of the file is reached
+                    while (!gCodes[i].AllFieldsPopulated() && stream.Peek() > 0)
                     {
-                        if (stream.Peek() > 0)
-                        {
-                            currLine = stream.ReadLine().Split(new string[] { " = " }, StringSplitOptions.None);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        // This represents one line of the .gcode file. This function moves the file pointer to the next
+                        // line after each call
+                        currLine = stream.ReadLine().Split(new string[] { " = " }, StringSplitOptions.None);
 
                         // Filament spool cost
                         if (currLine[0].Contains("filament_cost"))
@@ -234,7 +231,6 @@ namespace PrusaGCodeFileDataViewer
                             double value = double.Parse(currLine[1]);
                             gCodes[i].FilamentUsedCost = value;
                         }
-
                     }
                 }
             }
