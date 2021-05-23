@@ -15,7 +15,7 @@ First, you need to pick what directory you want to load `.gcode` files from. If 
 
 After that, you must wait a few seconds for the data to load. While this process is multithreaded, it loads slowly because the program scans each line of the `.gcode`
 file from top to bottom in search of the desired metadata, and that data is in the last few lines of the code. A more efficient way to tackle this problem would
-be to read the file from the bottom up, but C# does not make this easy. That would be a worthy enhancement, however. (See issue #1)
+be to read the file from the bottom up, but C# does not make this easy. That would be a worthy enhancement, however. (See [issue #1](https://github.com/pdnelson/Prusa-G-Code-File-Data-Viewer/issues/1))
 
 
 Now that the files are loaded, here are some of the features this program has!
