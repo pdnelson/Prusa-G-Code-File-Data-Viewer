@@ -24,6 +24,8 @@ Now that the files are loaded, here are some of the features this program has!
   - This automatically deducts from the total filament used and cost
 - Loading another directory will add to the current list; if you want to start over, you must first click "Clear" to get rid of the old list, or use your "Delete" key
 a bunch
+- Double-clicking a cell will pop up more information about that print. Well, that's what it would do if I implemented more things... Right now, all it does is
+show the information you can already see on the table.
 - "Export" will export the list to a `.csv`
   - It is important to note that the files will be listed in the .csv in the same order they were in the folder, regardless of how they are currently
   sorted on the user interface
