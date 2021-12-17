@@ -9,12 +9,17 @@ namespace PrusaGCodeFileDataViewer
 {
     public partial class frmGCodeViewer : Form
     {
-        List<GCodeFile> GCodeFiles;
+        private List<GCodeFile> GCodeFiles;
+        private FrmProgressForm progressForm;
+        private static Semaphore progressSem;
 
         public frmGCodeViewer()
         {
             InitializeComponent();
             GCodeFiles = new List<GCodeFile>();
+            progressForm = new FrmProgressForm();
+            progressSem = new Semaphore(0, 2);
+            progressSem.Release();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -34,9 +39,29 @@ namespace PrusaGCodeFileDataViewer
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    // If files are found, recalculate the totals with the new values
-                    if(LoadGCodeFilesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath)))
+                    // First, isolate any *.gcode directories
+                    List<String> gCodeDirectories = GetGCodeDirectoriesFromDirectoryList(Directory.GetFiles(fbd.SelectedPath));
+
+                    // If files are found, run the processes
+                    if(gCodeDirectories.Count > 0)
                     {
+                        progressForm.ProgressBar.Maximum = gCodeDirectories.Count;
+                        progressForm.ProgressBar.Value = 0;
+                        progressForm.CancellationRequested = false;
+                        
+                        Thread newFormThread = new Thread(() => { progressForm.ShowDialog(); });
+                        newFormThread.Start();
+
+                        // This process WILL freeze up the screen.
+                        LoadGCodeFilesFromDirectoryList(gCodeDirectories);
+                        
+                        Utilities.WriteToThreadFromThread(progressForm, () =>
+                        {
+                            progressForm.Close();
+                        });
+
+                        newFormThread.Join();
+
                         lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
                         lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
                     }
@@ -131,51 +156,54 @@ namespace PrusaGCodeFileDataViewer
         }
 
         /// <summary>
-        /// Loads .gcode files from a directory.
+        /// Takes a list of directories and keeps only the ones that end in *.gcode.
         /// </summary>
-        /// <param name="directories">All of the files within a directory.</param>
-        /// <returns>True if files were found, false if no files were found.</returns>
-        private bool LoadGCodeFilesFromDirectoryList(string[] directories)
+        /// <param name="directories">List of subdirectories within a directory.</param>
+        /// <returns></returns>
+        private List<String> GetGCodeDirectoriesFromDirectoryList(string[] directories)
         {
-            // Isolate G-Code files
             List<string> gCodeDirectories = new List<string>();
-            for(int i = 0; i < directories.Length; i++)
+            for (int i = 0; i < directories.Length; i++)
             {
                 if (directories[i].EndsWith(".gcode")) gCodeDirectories.Add(directories[i]);
             }
-            if (gCodeDirectories.Count == 0)
-            {
-                return false;
-            }
+            return gCodeDirectories;
+        }
 
+        /// <summary>
+        /// Loads .gcode files from a directory.
+        /// </summary>
+        /// <param name="directories">A list of GCode file directories.</param>
+        private void LoadGCodeFilesFromDirectoryList(List<String> directories)
+        {
             GCodeFile[] d1 = new GCodeFile[0];
             GCodeFile[] d2 = new GCodeFile[0];
             int threadTaskDivider = 0;
 
             // If more than one file, calculate how much each thread will process
-            if(gCodeDirectories.Count > 1)
+            if(directories.Count > 1)
             {
-                threadTaskDivider = gCodeDirectories.Count / 2;
+                threadTaskDivider = directories.Count / 2;
             }
 
             // If only one file, one thread can take care of it all
             else
             {
-                threadTaskDivider = gCodeDirectories.Count - 1;
+                threadTaskDivider = directories.Count - 1;
             }
 
             // Parse and add the files to the main list
             Thread p1 = new Thread(() => {
-                d1 = GCodeFileParser(0, threadTaskDivider, gCodeDirectories);
+                d1 = GCodeFileParser(0, threadTaskDivider, directories);
             });
             p1.Start();
 
             // If more than one file is present, split up the tasks between two threads
-            if (gCodeDirectories.Count > 1)
+            if (directories.Count > 1)
             {
                 Thread p2 = new Thread(() =>
                 {
-                    d2 = GCodeFileParser(threadTaskDivider + 1, gCodeDirectories.Count - 1, gCodeDirectories);
+                    d2 = GCodeFileParser(threadTaskDivider + 1, directories.Count - 1, directories);
                 });
                 p2.Start();
                 p2.Join();
@@ -183,18 +211,19 @@ namespace PrusaGCodeFileDataViewer
 
             p1.Join();
 
-            // Display files on the UI
-            AddGCodeToList(d1);
-            AddGCodeToList(d2);
-
-            return true;
+            if (!progressForm.CancellationRequested)
+            {
+                // Display files on the UI
+                AddGCodeToList(d1);
+                AddGCodeToList(d2);
+            }
         }
 
         private GCodeFile[] GCodeFileParser(int startIndex, int endIndex, List<string> directories)
         {
             GCodeFile[] gCodes = new GCodeFile[endIndex - startIndex + 1];
-
-            for(int i = 0; i < gCodes.Length; i++)
+            
+            for(int i = 0; i < gCodes.Length && !progressForm.CancellationRequested; i++)
             {
                 gCodes[i] = new GCodeFile();
 
@@ -219,7 +248,7 @@ namespace PrusaGCodeFileDataViewer
 
                     // Keep searching the file until all GCodeFile fields have been populated, 
                     // or the end of the file is reached
-                    while (!gCodes[i].AllFieldsPopulated() && stream.Peek() > 0)
+                    while (!gCodes[i].AllFieldsPopulated() && stream.Peek() > 0 && !progressForm.CancellationRequested)
                     {
                         // This represents one line of the .gcode file. This function moves the file pointer to the next
                         // line after each call
@@ -247,6 +276,14 @@ namespace PrusaGCodeFileDataViewer
                         }
                     }
                 }
+
+                // Increment the loading bar by 1
+                progressSem.WaitOne();
+                Utilities.WriteToThreadFromThread(progressForm, () =>
+                {
+                    progressForm.ProgressBar.PerformStep();
+                });
+                progressSem.Release();
             }
 
             return gCodes;
