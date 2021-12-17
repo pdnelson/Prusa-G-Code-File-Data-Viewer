@@ -110,19 +110,22 @@ namespace PrusaGCodeFileDataViewer
 
         private void dgvFiles_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            try
+            foreach(DataGridViewRow row in dgvFiles.SelectedRows)
             {
-                int index = (int)dgvFiles.Rows[dgvFiles.CurrentCell.RowIndex].Cells[0].Value;
+                try
+                {
+                    int index = (int)row.Cells[0].Value;
 
-                // Taking away the index makes it not match up with the DGV, so we just make it blank...
-                GCodeFiles[index] = new GCodeFile();
+                    // Taking away the index makes it not match up with the DGV, so we just make it blank...
+                    GCodeFiles[index] = new GCodeFile();
+                }
 
-                lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
-                lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
+                // If this exception occurs, the user didn't delete an existing cell
+                catch (NullReferenceException) { /* Ignored */ }
             }
 
-            // If this exception occurs, the user didn't delete an existing cell
-            catch (NullReferenceException) { }
+            lblTotalUsed.Text = "Total: " + GetTotalFilamentUsed() + "g";
+            lblTotalCost.Text = string.Format("Total: {0:C}", GetTotalFilamentUsedCost());
         }
 
         /// <summary>
