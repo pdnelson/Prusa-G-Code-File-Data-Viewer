@@ -54,7 +54,7 @@ namespace PrusaGCodeFileDataViewer
         {
             if (dgvFiles.Rows.Count > 0)
             {
-                Stream stream;
+                //Stream stream;
                 SaveFileDialog saveFile = new SaveFileDialog();
 
                 saveFile.Filter = "csv files (*.csv)|*.csv";
@@ -63,27 +63,29 @@ namespace PrusaGCodeFileDataViewer
 
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
-
-                    if ((stream = saveFile.OpenFile()) != null)
+                    using (Stream stream = saveFile.OpenFile())
                     {
-                        StringBuilder csv = new StringBuilder();
-
-                        // First write the header
-                        csv.AppendLine("Item Name,Filament Used,Total Cost");
-
-                        // Write each G-Code file to the CSV
-                        foreach(GCodeFile g in GCodeFiles)
+                        if (stream != null)
                         {
-                            if(g.FileName != null) csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
+                            StringBuilder csv = new StringBuilder();
+
+                            // First write the header
+                            csv.AppendLine("Item Name,Filament Used,Total Cost");
+
+                            // Write each G-Code file to the CSV
+                            foreach (GCodeFile g in GCodeFiles)
+                            {
+                                if (g.FileName != null) csv.AppendLine($"{g.FileName},{g.FilamentUsed},{g.FilamentUsedCost}");
+                            }
+
+                            // Append totals for each column
+                            csv.AppendLine($"Total:,{GetTotalFilamentUsed()},{GetTotalFilamentUsedCost()}");
+
+                            // Convert StringBuilder to bytes and close the stream
+                            byte[] bytes = Encoding.ASCII.GetBytes(csv.ToString());
+                            stream.Write(bytes, 0, bytes.Length);
+                            stream.Flush();
                         }
-
-                        // Append totals for each column
-                        csv.AppendLine($"Total:,{GetTotalFilamentUsed()},{GetTotalFilamentUsedCost()}");
-
-                        // Convert StringBuilder to bytes and close the stream
-                        byte[] bytes = Encoding.ASCII.GetBytes(csv.ToString());
-                        stream.Write(bytes, 0, bytes.Length);
-                        stream.Close();
                     }
                 }
             }
